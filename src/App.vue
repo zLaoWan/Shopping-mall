@@ -1,17 +1,31 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1 v-plugins="msg"></h1>
+    <Header></Header>
+    <!-- 路由组件出口 -->
+    <router-view></router-view>
+    <!-- 在home search显示 在登陆 注册隐藏 -->
+    <Footer v-show="route.meta.show"></Footer>
+  </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+import { useRouter, useRoute } from "vue-router";
+import { ref, provide, onMounted } from "vue";
+import { useStore } from "vuex";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+let msg = ref('admin')
+const route = useRoute()
+
+// 挂载至vue 后续可通过inject 直接获取
+const store = useStore();
+
+onMounted(() => {
+  // 派发一个action||获取商品分类的三级列表的数据
+  store.dispatch("categoryList");
+});
 </script>
 
 <style>
